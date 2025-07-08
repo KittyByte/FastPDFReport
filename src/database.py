@@ -1,7 +1,9 @@
 from sqlalchemy import text, create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 from src.settings import sql_settings
 
+from src.orm.models.base import Base
 
 
 # async_engine = create_async_engine(
@@ -16,9 +18,7 @@ from src.settings import sql_settings
 #         print(f'{res.first()=}')
 
 
-engine = create_engine(
-    url=sql_settings.DATABASE_URL_SQLITE
-)
+engine = create_engine(url=sql_settings.DATABASE_URL, echo=True)
 
 
 def get_version():
@@ -26,3 +26,9 @@ def get_version():
         res = conn.execute(text('SELECT 1')).first()
     print(f'{res=}')
     return str(res)
+
+
+def drop_and_create_database():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+
