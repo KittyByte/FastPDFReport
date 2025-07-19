@@ -1,28 +1,21 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column
 from src.settings import sql_settings
-from src.orm.models import BaseOrm, PDFReportOrm
+from sqlalchemy import text, create_engine
+from typing import Annotated
+from datetime import datetime
 
 
 engine = create_engine(url=sql_settings.DATABASE_URL, echo=True)
 session_factory = sessionmaker(engine)
 
 
-def some_sql():
-    with session_factory() as session:
-        res = session.add(PDFReportOrm(
-            
-        ))
-    print(f'{res=}')
-    return str(res)
+class BaseOrm(DeclarativeBase):
+    pass
 
 
-def create_tables():
-    BaseOrm.metadata.drop_all(engine)
-    BaseOrm.metadata.create_all(engine)
+intpk = Annotated[int, mapped_column(primary_key=True)]
+created_at = Annotated[datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))]  # func.now() он указывает время не по UTC0, а серверное
+updated_at = Annotated[datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)]
+# updated_at - делать обновление лучше всего на уровне БД, в Пострес есть триггеры на автообновление записей
 
-
-def drop_and_create_database():
-    BaseOrm.metadata.drop_all(engine)
-    create_tables()
 

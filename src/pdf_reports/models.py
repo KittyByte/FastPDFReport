@@ -1,8 +1,20 @@
 from enum import Enum
 from datetime import datetime
+from src.database import BaseOrm, intpk, created_at, updated_at
 from sqlalchemy.orm import Mapped, mapped_column
-from src.orm.models.base import BaseOrm, intpk, created_at, updated_at
 from sqlalchemy import ForeignKey
+
+
+
+class PDFReportOrm(BaseOrm):
+    __tablename__ = 'pdf_report'
+
+    id: Mapped[intpk]
+    path_to_file: Mapped[str]
+    date_from: Mapped[datetime]
+    date_to: Mapped[datetime]
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
 
 
 

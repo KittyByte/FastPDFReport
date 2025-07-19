@@ -7,7 +7,3 @@ class CreatePDFSchema(BaseModel):
     date_from: datetime
     date_to: datetime
 
-
-
-
-

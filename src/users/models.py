@@ -1,6 +1,6 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from src.orm.models.base import BaseOrm, intpk, created_at, updated_at
+from src.database import BaseOrm, intpk, created_at, updated_at
 
 
 
