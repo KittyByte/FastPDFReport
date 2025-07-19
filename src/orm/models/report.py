@@ -1,8 +1,9 @@
+from enum import Enum
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
-from src.orm.models.base import Base, intpk
-from sqlalchemy import ForeignKey, text
-from enum import Enum
+from src.orm.models.base import Base, intpk, created_at, updated_at
+from sqlalchemy import ForeignKey
+
 
 
 class ReportStatus(Enum):
@@ -22,7 +23,7 @@ class ReportOrm(Base):
     date_to: Mapped[datetime]
     status: Mapped[ReportStatus] = mapped_column(default=ReportStatus.pending)
     file_path: Mapped[str] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))  # func.now() он указывает время не по UTC0, а серверное
-    updated_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
     error_message: Mapped[str | None]
 

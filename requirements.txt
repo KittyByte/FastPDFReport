@@ -1,0 +1,11 @@
+alembic>=1.16.2
+asyncpg>=0.30.0
+celery>=5.5.3
+fastapi[standard]>=0.115.13
+psycopg>=3.2.9
+psycopg-binary>=3.2.9
+pydantic-settings>=2.10.0
+requests>=2.32.4
+sqlalchemy>=2.0.41
+uvloop; sys_platform != 'win32'
+httptools
