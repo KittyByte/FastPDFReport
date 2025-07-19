@@ -1,10 +1,10 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from src.orm.models.base import Base, intpk, created_at, updated_at
+from src.orm.models.base import BaseOrm, intpk, created_at, updated_at
 
 
 
-class UserOrm(Base):
+class UserOrm(BaseOrm):
     __tablename__ = "user"
 
     id: Mapped[intpk]

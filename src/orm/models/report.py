@@ -1,7 +1,7 @@
 from enum import Enum
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
-from src.orm.models.base import Base, intpk, created_at, updated_at
+from src.orm.models.base import BaseOrm, intpk, created_at, updated_at
 from sqlalchemy import ForeignKey
 
 
@@ -14,7 +14,7 @@ class ReportStatus(Enum):
 
 
 
-class ReportOrm(Base):
+class ReportOrm(BaseOrm):
     __tablename__ = 'report'
 
     id: Mapped[intpk]

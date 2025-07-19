@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 
-class Base(DeclarativeBase):
+class BaseOrm(DeclarativeBase):
     pass
 
 

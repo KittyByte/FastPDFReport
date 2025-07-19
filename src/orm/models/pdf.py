@@ -1,10 +1,10 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped
-from src.orm.models.base import Base, intpk, created_at, updated_at
+from src.orm.models.base import BaseOrm, intpk, created_at, updated_at
 
 
 
-class PDFReportOrm(Base):
+class PDFReportOrm(BaseOrm):
     __tablename__ = 'pdf_report'
 
     id: Mapped[intpk]
