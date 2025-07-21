@@ -8,6 +8,6 @@ uv pip install -r pyproject.toml
 
 2. Запуск проекта
 ```sh
-uvicorn src.main:app
+uvicorn app.main:app
 ```
 

@@ -1,6 +1,6 @@
 from fastapi import BackgroundTasks, APIRouter
-from src.pdf_reports.schemas import CreatePDFSchema
-from src.tasks.tasks import send_msg_to_tg_bot
+from app.pdf_reports.schemas import CreatePDFSchema
+from app.tasks.tasks import send_msg_to_tg_bot
 
 
 router = APIRouter(

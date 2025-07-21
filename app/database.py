@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column
-from src.settings import sql_settings
+from app.settings import sql_settings
 from sqlalchemy import text, create_engine
 from typing import Annotated
 from datetime import datetime

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from src.pdf_reports.routers import router as pdf_router
-from src.services.routers import router as service_router
+from app.pdf_reports.routers import router as pdf_router
+from app.services.routers import router as service_router
 
 
 

@@ -1,8 +1,8 @@
 """ указывать тут все импорты для корректной работы create_all И drop_all """
-from src.pdf_reports.models import *
-from src.users.models import *
+from app.pdf_reports.models import *
+from app.users.models import *
 
-from src.database import BaseOrm, session_factory, engine
+from app.database import BaseOrm, session_factory, engine
 from datetime import datetime
 
 

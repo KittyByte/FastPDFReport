@@ -1,5 +1,5 @@
 import requests
-from src.settings import settings
+from app.settings import settings
 
 
 
