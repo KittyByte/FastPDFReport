@@ -10,6 +10,9 @@ class UserOrm(BaseOrm):
     id: Mapped[intpk]
     name: Mapped[str] = mapped_column(String(30))
     fullname: Mapped[str | None]
+    email: Mapped[str | None]
+    disabled: Mapped[bool] = mapped_column(default=False)
+
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 

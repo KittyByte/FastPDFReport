@@ -1,6 +1,7 @@
 import requests
 from app.settings import settings
 from app.pdf_reports.schemas import CreatePDFSchema
+from app.pdf_reports.dao import ReportDAO
 
 
 
@@ -12,6 +13,9 @@ def send_msg_to_tg_bot(msg, chat_id: int) -> dict:
 
 
 def create_and_send_report(data: CreatePDFSchema):
+    task = ReportDAO.create(
+        
+    )
     
     
     send_msg_to_tg_bot("TEST", data.chat_id)

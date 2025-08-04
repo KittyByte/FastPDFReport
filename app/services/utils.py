@@ -1,7 +1,7 @@
 """ Указывать тут все импорты для корректной работы create_all И drop_all """
 import random
 from datetime import date, timedelta
-from sqlalchemy import select, update, and_, cast, func, Integer, insert
+from sqlalchemy import select, update, and_, cast, func, Integer
 
 from app.pdf_reports.models import *
 from app.users.models import *
@@ -131,18 +131,6 @@ def update_sales_report():
             ).filter_by(id=2)
         session.execute(query)
         session.commit()
-
-
-def education_examples():
-    with session_factory() as session:
-        user = session.get(UserOrm, 3)  # При обновлении через get будет 2 запроса, на получение и обновление
-        user.name=random.choice(['Бобер', 'Цыпа', 'Голубио'])
-        user.fullname=random.choice(['Бобер', 'Цыпа', 'Голубио'])
-        # session.flush()  сохраняет изменения в бд, но не завершает сессию как commit
-        session.expire(user)  # сброс незакоммиченных изменений объекта user
-        session.expire_all()  # сброс всех незакоммиченных изменений в сессии
-        print(user.fullname)  # после expire\expire_all при попытке доступа к полям объекта будет выполнен новый запрос к БД
-        session.refresh(user)  # делает запрос в бд на получение актуальных значений
 
 
 def select_sales_reports_with_avg():

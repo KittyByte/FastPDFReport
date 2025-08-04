@@ -2,13 +2,14 @@ from app.database import session_factory
 from sqlalchemy import delete, select, insert
 
 
-class BaseORM:
-    model = None  # заменить потом на None
+class BaseDAO:
+    model = None
 
     @classmethod
     def find_one_or_none(cls, **filter_by):
         with session_factory() as session:
             query = select(cls.model.__table__.columns).filter_by(**filter_by)
+            # __table__.columns нужен для корректной работы mappings
             res = session.execute(query)
             return res.mappings().one_or_none()
 
@@ -20,19 +21,20 @@ class BaseORM:
             return res.mappings().all()
 
     @classmethod
-    def add(cls, **value):
+    def create(cls, **data):
         with session_factory() as session:
-            new_instance = cls.model(**value)
-            session.add(new_instance)
+            query = insert(cls.model).values(**data).returning(cls.model.id)
+            result = session.execute(query)
             session.commit()
-            return new_instance
+            return result.mappings().first()
 
     @classmethod
-    def add_many(cls, values: list[dict]):
+    def create_bulk(cls, values: list[dict]):
         with session_factory() as session:
-            query = insert(cls.model).values()
-            session.execute(query)
+            query = insert(cls.model).values(values).returning(cls.model.id)
+            result = session.execute(query)
             session.commit()
+            return result.mappings().all()
 
     @classmethod
     def delete(cls, **filter_by):
