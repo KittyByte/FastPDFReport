@@ -1,6 +1,6 @@
-from pydantic import Field
+from pydantic import Field, DirectoryPath
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from pathlib import Path
 
 
 class SQLSettings(BaseSettings):
@@ -22,7 +22,8 @@ class SQLSettings(BaseSettings):
 
 
 class Settings(BaseSettings):
-    tg_bot_token: str = Field(validation_alias='TELEGRAM_BOT_TOKEN')
+    bot_token: str = Field(validation_alias='TELEGRAM_BOT_TOKEN')
+    files_dir: DirectoryPath = Path().absolute() / 'files'
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 

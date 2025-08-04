@@ -1,7 +1,7 @@
 from enum import Enum
 from datetime import date
 from app.database import BaseOrm, intpk, created_at, updated_at
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, class_mapper
 from sqlalchemy import ForeignKey
 
 
@@ -27,6 +27,16 @@ class SalesReportOrm(BaseOrm):
     comment: Mapped[str]  # Примечания
     created_at: Mapped[created_at]
 
+    def __repr__(self):
+        # Форматированный вывод в запросах session при отладке
+        cls_name = self.__class__.__name__
+        columns = class_mapper(self.__class__).columns
+        values = {
+            column.key: getattr(self, column.key, None) for column in columns
+        }
+        values_str = ", ".join(f"{k}={v!r}" for k, v in values.items())
+        return f"<Object: {cls_name} | Attributes: {values_str}>"
+
 
 
 class ReportStatus(Enum):
@@ -38,6 +48,7 @@ class ReportStatus(Enum):
 
 
 class ReportOrm(BaseOrm):
+    """ Хранит в себе информацию о созданном по запросу отчете """
     __tablename__ = 'report'
 
     id: Mapped[intpk]

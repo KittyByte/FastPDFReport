@@ -1,4 +1,4 @@
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, class_mapper
 from app.settings import sql_settings
 from sqlalchemy import text, create_engine
 from typing import Annotated
@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 
 
-engine = create_engine(url=sql_settings.DATABASE_URL, echo=True)
+engine = create_engine(url=sql_settings.DATABASE_URL, echo=True, hide_parameters=True)
 session_factory = sessionmaker(engine)
 
 
@@ -16,6 +16,10 @@ class BaseOrm(DeclarativeBase):
     type_annotation_map = {
         dict: JSONB
     }
+
+    def to_dict(self):
+        columns = class_mapper(self.__class__).columns
+        return {column.key: getattr(self, column.key) for column in columns}
 
 
 intpk = Annotated[int, mapped_column(primary_key=True)]

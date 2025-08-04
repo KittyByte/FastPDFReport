@@ -1,10 +1,11 @@
-""" указывать тут все импорты для корректной работы create_all И drop_all """
-from app.pdf_reports.models import *
-from app.users.models import *
-
-from app.database import BaseOrm, session_factory, engine
+""" Указывать тут все импорты для корректной работы create_all И drop_all """
 import random
 from datetime import date, timedelta
+from sqlalchemy import select, update, and_, cast, func, Integer, insert
+
+from app.pdf_reports.models import *
+from app.users.models import *
+from app.database import BaseOrm, session_factory, engine
 
 
 
@@ -21,7 +22,7 @@ def create_user():
 
 # Предполагаем, что в таблице users уже есть хотя бы один пользователь с id=1.
 # При необходимости замените user_id на существующий.
-def some_sql(num_records: int = 100):
+def create_sales_reports(num_records: int = 100):
     product_names = [
         "Умная колонка", "Наушники Bluetooth", "Умная лампа",
         "Фитнес-браслет", "Электросамокат", "Робот-пылесос"
@@ -83,7 +84,6 @@ def some_sql(num_records: int = 100):
                 "Проверить не требуется"
             ])
 
-            # Создаём запись
             report = SalesReportOrm(
                 user_id=1,
                 period_from=start,
@@ -102,10 +102,7 @@ def some_sql(num_records: int = 100):
                 comment=comment
             )
             session.add(report)
-
         session.commit()
-
-    return 'OK'
 
 
 def create_tables():
@@ -117,4 +114,70 @@ def drop_and_create_database():
     print('='*100)
     BaseOrm.metadata.drop_all(engine)
     create_tables()
+
+
+def select_sales_report():
+    with session_factory() as session:
+        query = select(SalesReportOrm)
+        result = session.execute(query).scalars().first()
+        print(result)
+
+
+def update_sales_report():
+    with session_factory() as session:
+        query = update(UserOrm).values(
+                name=random.choice(['Бобер', 'Цыпа', 'Голубио']),
+                fullname=random.choice(['Бобер', 'Цыпа', 'Голубио'])
+            ).filter_by(id=2)
+        session.execute(query)
+        session.commit()
+
+
+def education_examples():
+    with session_factory() as session:
+        user = session.get(UserOrm, 3)  # При обновлении через get будет 2 запроса, на получение и обновление
+        user.name=random.choice(['Бобер', 'Цыпа', 'Голубио'])
+        user.fullname=random.choice(['Бобер', 'Цыпа', 'Голубио'])
+        # session.flush()  сохраняет изменения в бд, но не завершает сессию как commit
+        session.expire(user)  # сброс незакоммиченных изменений объекта user
+        session.expire_all()  # сброс всех незакоммиченных изменений в сессии
+        print(user.fullname)  # после expire\expire_all при попытке доступа к полям объекта будет выполнен новый запрос к БД
+        session.refresh(user)  # делает запрос в бд на получение актуальных значений
+
+
+def select_sales_reports_with_avg():
+    with session_factory() as session:
+        """
+        SELECT successful_orders, CAST(avg(cancelled_orders) AS INTEGER) AS avg_cancelled_orders
+        FROM sales_report
+        WHERE top_product_name LIKE '%Фитнес-браслет%' AND successful_orders > 10
+        GROUP BY successful_orders
+        """
+        query = (
+            select(
+                SalesReportOrm.successful_orders,
+                cast(func.avg(SalesReportOrm.cancelled_orders), Integer).label('avg_cancelled_orders')
+            )
+            .filter(and_(
+                SalesReportOrm.top_product_name.contains('Фитнес-браслет'),
+                SalesReportOrm.successful_orders > 10
+            ))
+            .group_by(SalesReportOrm.successful_orders)
+        )
+
+        r = session.execute(query).all()
+        print(query.compile(compile_kwargs={'literal_binds': True}))  # вывод SQL с подставленными параметрами
+        print(r)  # [(42, 6), (31, 8), (18, 3)]
+        print(r[0].avg_cancelled_orders)  # 6  # берем первую запись и обращаемся к label
+
+
+
+def some_sql():
+    # create_user()
+    # update_sales_report()
+    select_sales_report()
+    # select_sales_reports_with_avg()
+    
+
+    return 'OK'
 

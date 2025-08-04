@@ -1,6 +1,6 @@
 from fastapi import BackgroundTasks, APIRouter
 from app.pdf_reports.schemas import CreatePDFSchema
-from app.tasks.tasks import send_msg_to_tg_bot
+from app.tasks.tasks import create_and_send_report
 
 
 router = APIRouter(
@@ -10,6 +10,6 @@ router = APIRouter(
 
 @router.post('/create')
 def create_pdf_report(data: CreatePDFSchema, background_tasks: BackgroundTasks) -> dict:
-    background_tasks.add_task(send_msg_to_tg_bot, "TEST", data.chat_id)
+    background_tasks.add_task(create_and_send_report, data)
     return {"message": "Notification sent in the background"}
 
