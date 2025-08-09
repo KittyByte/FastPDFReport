@@ -8,7 +8,8 @@ class UserOrm(BaseOrm):
     __tablename__ = "user"
 
     id: Mapped[intpk]
-    name: Mapped[str] = mapped_column(String(30))
+    username: Mapped[str] = mapped_column(String(50), unique=True)
+    password: Mapped[str]
     fullname: Mapped[str | None]
     email: Mapped[str | None]
     disabled: Mapped[bool] = mapped_column(default=False)
@@ -17,6 +18,7 @@ class UserOrm(BaseOrm):
     updated_at: Mapped[updated_at]
 
     def __repr__(self) -> str:
-        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
-
-
+        return (
+            f"<Table: User(id={self.id!r}, username={self.username!r}, "
+            f"fullname={self.fullname!r}), disabled={self.disabled!r})>"
+        )
