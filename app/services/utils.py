@@ -1,12 +1,12 @@
 """ Указывать тут все импорты для корректной работы create_all И drop_all """
 import random
 from datetime import date, timedelta
-from sqlalchemy import select, update, and_, cast, func, Integer
 
+from sqlalchemy import Integer, and_, cast, func, select, update
+
+from app.database import BaseOrm, engine, session_factory
 from app.pdf_reports.models import *
 from app.users.models import *
-from app.database import BaseOrm, session_factory, engine
-
 
 
 def create_user():

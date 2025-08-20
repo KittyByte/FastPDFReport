@@ -1,5 +1,6 @@
+from sqlalchemy import delete, insert, select
+
 from app.database import session_factory
-from sqlalchemy import delete, select, insert
 
 
 class BaseDAO:
@@ -9,7 +10,7 @@ class BaseDAO:
     def find_one_or_none(cls, **filter_by):
         with session_factory() as session:
             query = select(cls.model.__table__.columns).filter_by(**filter_by)
-            # __table__.columns нужен для корректной работы mappings
+            # __table__.columns нужен чтобы mappings выводил все поля, а не экземпляр класса
             res = session.execute(query)
             return res.mappings().one_or_none()
 

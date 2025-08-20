@@ -1,9 +1,10 @@
-from enum import Enum
 from datetime import date
-from app.database import BaseOrm, intpk, created_at, updated_at
-from sqlalchemy.orm import Mapped, mapped_column, class_mapper
-from sqlalchemy import ForeignKey
+from enum import Enum
 
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, class_mapper, mapped_column
+
+from app.database import BaseOrm, created_at, intpk, updated_at
 
 
 class SalesReportOrm(BaseOrm):

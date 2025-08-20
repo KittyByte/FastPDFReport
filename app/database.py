@@ -1,11 +1,12 @@
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, class_mapper
-from app.settings import sql_settings
-from sqlalchemy import text, create_engine
-from typing import Annotated
 from datetime import datetime
+from typing import Annotated
+
+from sqlalchemy import create_engine, text
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import (DeclarativeBase, class_mapper, mapped_column,
+                            sessionmaker)
 
-
+from app.settings import sql_settings
 
 engine = create_engine(url=sql_settings.DATABASE_URL, echo=True, hide_parameters=True)
 session_factory = sessionmaker(engine)

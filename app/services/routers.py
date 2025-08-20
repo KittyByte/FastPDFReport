@@ -1,8 +1,9 @@
-from typing import Literal
-from fastapi import APIRouter
-from app.services.utils import drop_and_create_database, create_tables, some_sql
-from typing import Any
+from typing import Any, Literal
 
+from fastapi import APIRouter
+
+from app.services.utils import (create_tables, drop_and_create_database,
+                                some_sql)
 
 router = APIRouter(
     prefix='/services', tags=['Service']

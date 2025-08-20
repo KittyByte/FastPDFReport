@@ -1,6 +1,8 @@
+import bcrypt
+
 from app.orm.dao import BaseDAO
 from app.users.models import UserOrm
-import bcrypt
+from app.users.schemas import UserInDB
 
 
 class UserDAO(BaseDAO):
@@ -9,6 +11,11 @@ class UserDAO(BaseDAO):
     @classmethod
     def _hash_password(cls, password: str):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    
+    @classmethod
+    def find_one_or_none(cls, **filter_by):
+        user = super().find_one_or_none(**filter_by)
+        return UserInDB(**user) if user else None
 
     @classmethod
     def create(cls, **data):
@@ -22,5 +29,5 @@ class UserDAO(BaseDAO):
         return super().create_bulk(values)
 
     @classmethod
-    def is_valid_password(cls, hashed_password: str, password: str):
-        return bcrypt.checkpw(hashed_password.encode(), password.encode())
+    def is_valid_password(cls, password: str, hashed_password: str):
+        return bcrypt.checkpw(password.encode(), hashed_password.encode())

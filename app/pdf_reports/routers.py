@@ -1,7 +1,7 @@
-from fastapi import BackgroundTasks, APIRouter
+from fastapi import APIRouter, BackgroundTasks
+
 from app.pdf_reports.schemas import CreatePDFSchema
 from app.tasks.tasks import create_and_send_report
-
 
 router = APIRouter(
     prefix='/report', tags=['PDF']
