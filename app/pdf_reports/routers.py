@@ -1,10 +1,14 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 
 from app.pdf_reports.schemas import CreatePDFSchema
 from app.tasks.tasks import create_and_send_report
+from app.security import oauth2_scheme
+
 
 router = APIRouter(
-    prefix='/report', tags=['PDF']
+    tags=['PDF'],
+    prefix='/report', 
+    dependencies=[Depends(oauth2_scheme)]
 )
 
 
