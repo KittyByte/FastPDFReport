@@ -5,9 +5,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.users.schemas import Token, User
 from app.exceptions import invalid_user_exception
-from app.users.service import (
-    authenticate_user, create_access_token, get_current_active_user
-)
+from app.users.service import authenticate_user, create_access_token
+from app.users.dependencies import GetCurrentActiveUserDep
 
 
 router = APIRouter(
@@ -25,11 +24,11 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> T
 
 
 @router.get("/me", response_model=User)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
+async def read_users_me(current_user: GetCurrentActiveUserDep):
     return current_user
 
 
 @router.get("/me/items/")
-async def read_own_items(current_user: Annotated[User, Depends(get_current_active_user)]):
+async def read_own_items(current_user: GetCurrentActiveUserDep):
     return [{"item_id": "Foo", "owner": current_user.username}]
 

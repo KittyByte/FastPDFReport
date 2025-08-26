@@ -4,6 +4,10 @@ from pydantic import DirectoryPath, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+ALGORITHM = 'HS256'
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+
 class SQLSettings(BaseSettings):
     DB_HOST: str
     DB_PORT: int
