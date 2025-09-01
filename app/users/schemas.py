@@ -18,5 +18,6 @@ class User(BaseModel):
 
 
 class UserInDB(User):
+    id: int
     hashed_password: str = Field(validation_alias='password')
 

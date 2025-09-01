@@ -6,7 +6,7 @@ from jwt.exceptions import InvalidTokenError
 
 from app.security import oauth2_scheme
 from app.settings import settings, ALGORITHM
-from app.users.schemas import TokenData, User
+from app.users.schemas import TokenData, UserInDB
 from app.exceptions import credentials_exception, inactive_user_exception
 from app.users.service import get_user
 
@@ -29,13 +29,13 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_current_active_user(current_user: Annotated[UserInDB, Depends(get_current_user)]):
     if current_user.disabled:
         raise inactive_user_exception
     return current_user
 
 
-GetCurrentActiveUserDep = Annotated[User, Depends(get_current_active_user)]
-GetCurrentUserDep = Annotated[User, Depends(get_current_user)]
+GetCurrentActiveUserDep = Annotated[UserInDB, Depends(get_current_active_user)]
+GetCurrentUserDep = Annotated[UserInDB, Depends(get_current_user)]
 
 
