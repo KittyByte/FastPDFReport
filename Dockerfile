@@ -1,6 +1,6 @@
 FROM python:3.12
 
-WORKDIR /app
+WORKDIR /project
 
 RUN apt-get update && apt-get install -y libffi-dev libpq-dev curl ca-certificates
 
@@ -14,5 +14,3 @@ COPY ./pyproject.toml pyproject.toml
 RUN uv pip install --system --no-cache-dir --upgrade -r pyproject.toml
 
 COPY . .
-
-ENTRYPOINT ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
