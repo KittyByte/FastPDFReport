@@ -7,22 +7,24 @@ from sqlalchemy import Integer, and_, cast, func, select, update
 from app.database import BaseOrm, engine, session_factory
 from app.pdf_reports.models import *
 from app.users.models import *
+from app.users.dao import UserDAO
 
 
 def create_user():
-    with session_factory() as session:
-        user = UserOrm(
-            name='Bober',
-            fullname='Bobrenko',
-        )
-        session.add(user)
-        session.commit()
-    return 'OK'
+    UserDAO.create(
+        username='Spongebob',
+        password='acuna_matata',
+        fullname='Spongebob Squarepants',
+        email='qwerty@gmail.com',
+        disabled=False
+    )
 
 
 # Предполагаем, что в таблице users уже есть хотя бы один пользователь с id=1.
 # При необходимости замените user_id на существующий.
 def create_sales_reports(num_records: int = 100):
+    create_user()
+
     product_names = [
         "Умная колонка", "Наушники Bluetooth", "Умная лампа",
         "Фитнес-браслет", "Электросамокат", "Робот-пылесос"
@@ -163,7 +165,8 @@ def select_sales_reports_with_avg():
 def some_sql():
     # create_user()
     # update_sales_report()
-    select_sales_report()
+    # select_sales_report()
+    create_sales_reports()
     # select_sales_reports_with_avg()
     
 

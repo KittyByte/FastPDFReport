@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
 class SQLSettings(BaseSettings):
@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     bot_token: str = Field(validation_alias='TELEGRAM_BOT_TOKEN')
     secret_key: str = Field(validation_alias='SECRET_KEY')
     path_to_files: DirectoryPath = Path().absolute() / 'files'
+
+    celery_broker_url: str = Field(default='', validation_alias='CELERY_BROKER_URL')
+    celery_result_backend: str = Field(default='', validation_alias='CELERY_RESULT_BACKEND')
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 

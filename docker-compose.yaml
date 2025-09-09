@@ -1,0 +1,60 @@
+services:
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}-web
+    build: .
+    ports:
+      - 80:80
+    env_file:
+      - .env
+    volumes:
+      - ./files:/app/files
+    # depends_on:
+    #   - rabbitmq
+
+  postgres-db:
+    container_name: ${COMPOSE_PROJECT_NAME}-postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    expose:
+      - ${DB_PORT}
+
+  # celery-main:
+  #   container_name: ${COMPOSE_PROJECT_NAME}-celery-main
+  #   build: .
+  #   command: celery -A celery.celery_app worker -l info --logfile=logs/celery.log
+  #   depends_on:
+  #     - web
+  #     - rabbitmq
+
+  # rabbitmq:
+  #   container_name: ${COMPOSE_PROJECT_NAME}-rabbitmq
+  #   image: rabbitmq:4.0-management
+  #   volumes:
+  #     - rabbimq_data:/var/lib/rabbitmq
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=${REBBITMQ_USER}
+  #     - RABBITMQ_DEFAULT_PASS=${REBBITMQ_PASSWORD}
+  #     - RABBITMQ_NODE_PORT=${REBBITMQ_PORT}
+  #     # - RABBITMQ_SERVER_START_ARGS=-rabbitmq_management listener [{port,${RABBIT_WEB_PORT}}]
+  #     - RABBITMQ_DEFAULT_VHOST=${REBBITMQ_VHOST}
+
+  # celery-flower:
+  #   container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
+  #   build: .
+  #   command: celery -A celery.celery_app flower
+  #   environment:
+  #     - FLOWER_UNAUTHENTICATED_API=true
+  #   ports:
+  #     - 5555:5555
+  #   depends_on:
+  #     - web
+  #     - rabbitmq
+
+
+volumes:
+  rabbimq_data:
+    name: ${COMPOSE_PROJECT_NAME}_rabbimq_data
