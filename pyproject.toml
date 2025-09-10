@@ -1,7 +1,7 @@
 [project]
 name = "fastpdfreport"
 version = "0.1.0"
-description = "Add your description here"
+description = "Сервис обработки и получения отчетов по данным заказов"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,6 +10,7 @@ dependencies = [
     "bcrypt>=4.3.0",
     "celery>=5.5.3",
     "fastapi[standard]>=0.115.13",
+    "flower>=2.0.1",
     "psycopg>=3.2.9",
     "psycopg-binary>=3.2.9",
     "pydantic-settings>=2.10.0",

@@ -1,10 +1,12 @@
 from typing import Any, Literal
 
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 from app.services.utils import (
     create_tables, drop_and_create_database, some_sql
 )
+from app.celery import debug_task
 
 
 router = APIRouter(
@@ -28,3 +30,8 @@ def create_tables_api() -> Literal['OK']:
 def exec_sql() -> Any:
     return some_sql()
 
+
+@router.post("/tasks", status_code=201)
+def run_task(time_to_sleep: int):
+    task = debug_task.delay(int(time_to_sleep))
+    return JSONResponse({"task_id": task.id})

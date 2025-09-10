@@ -22,6 +22,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
     expose:
       - ${DB_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   celery-main:
     container_name: ${COMPOSE_PROJECT_NAME}-celery-main
@@ -59,3 +61,5 @@ services:
 volumes:
   rabbimq_data:
     name: ${COMPOSE_PROJECT_NAME}_rabbimq_data
+  postgres_data:
+    name: ${COMPOSE_PROJECT_NAME}_postgres_data
