@@ -6,9 +6,9 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import (DeclarativeBase, class_mapper, mapped_column,
                             sessionmaker)
 
-from app.settings import sql_settings
+from app.settings import settings
 
-engine = create_engine(url=sql_settings.DATABASE_URL, echo=True, hide_parameters=True)
+engine = create_engine(url=settings.DATABASE_URL, echo=True, hide_parameters=True)
 session_factory = sessionmaker(engine)
 
 

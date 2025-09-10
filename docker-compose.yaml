@@ -39,23 +39,23 @@ services:
     volumes:
       - rabbimq_data:/var/lib/rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=${REBBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${REBBITMQ_PASSWORD}
-      - RABBITMQ_NODE_PORT=${REBBITMQ_PORT}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - RABBITMQ_NODE_PORT=${RABBITMQ_PORT}
       # - RABBITMQ_SERVER_START_ARGS=-rabbitmq_management listener [{port,${RABBIT_WEB_PORT}}]
-      - RABBITMQ_DEFAULT_VHOST=${REBBITMQ_VHOST}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VHOST}
 
-  celery-flower:
-    container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
-    build: .
-    command: celery -A app.celery.celery_app flower
-    environment:
-      - FLOWER_UNAUTHENTICATED_API=true
-    ports:
-      - 5555:5555
-    depends_on:
-      - web
-      - rabbitmq
+  # celery-flower:
+  #   container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
+  #   build: .
+  #   command: celery -A app.celery.celery_app flower
+  #   environment:
+  #     - FLOWER_UNAUTHENTICATED_API=true
+  #   ports:
+  #     - 5555:5555
+  #   depends_on:
+  #     - web
+  #     - rabbitmq
 
 
 volumes:

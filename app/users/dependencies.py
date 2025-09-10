@@ -14,7 +14,7 @@ from app.users.service import get_user
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get('sub')
 
         if username is None:

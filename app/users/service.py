@@ -28,7 +28,7 @@ def create_access_token(
         'exp': datetime.now(timezone.utc) + expires_delta
     }
     to_encode.update(data)
-    return jwt.encode(to_encode, settings.secret_key, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
 
 
 def get_user(username: str) -> UserInDB | None:

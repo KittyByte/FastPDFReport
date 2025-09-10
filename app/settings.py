@@ -8,7 +8,25 @@ ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
-class SQLSettings(BaseSettings):
+
+class Settings(BaseSettings):
+    BOT_TOKEN: str = Field(validation_alias='TELEGRAM_BOT_TOKEN')
+    SECRET_KEY: str
+    PATH_TO_FILES: DirectoryPath = Path().absolute() / 'files'
+    # =================================
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+    RABBITMQ_HOST: str
+    RABBITMQ_PORT: str
+    RABBITMQ_VHOST: str
+
+    @property
+    def CELERY_BROKER_URL(self):
+        return f'amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}/{self.RABBITMQ_VHOST}'
+    @property
+    def CELERY_RESULT_BACKEND(self):
+        return f'db+postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
+    # =================================
     DB_HOST: str
     DB_PORT: int
     DB_NAME: str
@@ -18,25 +36,10 @@ class SQLSettings(BaseSettings):
     @property
     def DATABASE_URL(self):
         return f'postgresql+psycopg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
-
-    @property
-    def ASYNC_DATABASE_URL(self):
-        return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
-
-    model_config = SettingsConfigDict(env_file='.env', extra='ignore')
-
-
-class Settings(BaseSettings):
-    bot_token: str = Field(validation_alias='TELEGRAM_BOT_TOKEN')
-    secret_key: str = Field(validation_alias='SECRET_KEY')
-    path_to_files: DirectoryPath = Path().absolute() / 'files'
-
-    celery_broker_url: str = Field(default='', validation_alias='CELERY_BROKER_URL')
-    celery_result_backend: str = Field(default='', validation_alias='CELERY_RESULT_BACKEND')
+        # return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
+    # =================================
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
 
 settings = Settings()
-sql_settings = SQLSettings()
-
