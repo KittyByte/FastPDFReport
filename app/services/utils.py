@@ -8,6 +8,8 @@ from app.database import BaseOrm, engine, session_factory
 from app.pdf_reports.models import *
 from app.users.models import *
 from app.users.dao import UserDAO
+from app.celery import celery_app
+from celery.result import AsyncResult as AsyncResultTyping
 
 
 def create_user():
@@ -159,6 +161,11 @@ def select_sales_reports_with_avg():
         print(query.compile(compile_kwargs={'literal_binds': True}))  # вывод SQL с подставленными параметрами
         print(r)  # [(42, 6), (31, 8), (18, 3)]
         print(r[0].avg_cancelled_orders)  # 6  # берем первую запись и обращаемся к label
+
+
+def t_status(task_id) -> AsyncResultTyping:
+    res = celery_app.AsyncResult(task_id)
+    return res
 
 
 
