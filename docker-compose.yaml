@@ -10,7 +10,8 @@ services:
     volumes:
       - ./files:/project/files
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   postgres-db:
     container_name: ${COMPOSE_PROJECT_NAME}-postgres
@@ -30,8 +31,8 @@ services:
     build: .
     command: celery -A app.celery.celery_app worker -l info
     depends_on:
-      - web
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   rabbitmq:
     container_name: ${COMPOSE_PROJECT_NAME}-rabbitmq
@@ -44,6 +45,11 @@ services:
       - RABBITMQ_NODE_PORT=${RABBITMQ_PORT}
       # - RABBITMQ_SERVER_START_ARGS=-rabbitmq_management listener [{port,${RABBIT_WEB_PORT}}]
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VHOST}
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 30s
+      retries: 3
 
   # celery-flower:
   #   container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
@@ -54,7 +60,6 @@ services:
   #   ports:
   #     - 5555:5555
   #   depends_on:
-  #     - web
   #     - rabbitmq
 
 
