@@ -51,16 +51,17 @@ services:
       timeout: 30s
       retries: 3
 
-  # celery-flower:
-  #   container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
-  #   build: .
-  #   command: celery -A app.celery.celery_app flower
-  #   environment:
-  #     - FLOWER_UNAUTHENTICATED_API=true
-  #   ports:
-  #     - 5555:5555
-  #   depends_on:
-  #     - rabbitmq
+  celery-flower:
+    container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
+    build: .
+    command: celery -A app.celery.celery_app flower
+    environment:
+      - FLOWER_UNAUTHENTICATED_API=true
+    ports:
+      - 5555:5555
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 
 volumes:
