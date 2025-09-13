@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from app.services.utils import (
     create_tables, drop_and_create_database, some_sql, t_status
 )
-from app.celery import debug_task
+from app.tasks.tasks import debug_task
 
 
 router = APIRouter(
