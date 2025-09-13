@@ -1,21 +1,19 @@
-import requests
+from app.celery import celery_app
 
 from app.pdf_reports.dao import ReportDAO
 from app.pdf_reports.schemas import CreatePDFSchema
-from app.settings import settings
+from app.tasks.service import send_msg_to_tg_bot
 
 
-def send_msg_to_tg_bot(msg, chat_id: int) -> dict:
-    return requests.post(
-        f'https://api.telegram.org/bot{settings.BOT_TOKEN}/sendMessage',
-        data={'chat_id': chat_id, 'text': msg}
-    ).json()
 
-
-def create_and_send_report(data: CreatePDFSchema):
+@celery_app.task(bind=True)
+def create_and_send_report(self, user_id: int, data: dict):
     # task = ReportDAO.create(
         
     # )
+    print('='*100)
+    print(f'{user_id=}\n{data=}\n{self=}')
+    print('='*100)
     
     
     send_msg_to_tg_bot("TEST", data.chat_id)
