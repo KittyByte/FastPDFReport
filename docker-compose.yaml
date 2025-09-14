@@ -50,6 +50,8 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
+    ports:
+      - 15672:15672
 
   celery-flower:
     container_name: ${COMPOSE_PROJECT_NAME}-celery-flower
