@@ -22,20 +22,20 @@ class BaseDAO:
             return res.mappings().all()
 
     @classmethod
-    def create(cls, **data):
+    def create(cls, **data) -> int:
         with session_factory() as session:
             query = insert(cls.model).values(**data).returning(cls.model.id)
             result = session.execute(query)
             session.commit()
-            return result.mappings().first()
+            return result.mappings().first()['id']
 
     @classmethod
-    def create_bulk(cls, values: list[dict]):
+    def create_bulk(cls, values: list[dict]) -> list[int]:
         with session_factory() as session:
             query = insert(cls.model).values(values).returning(cls.model.id)
             result = session.execute(query)
             session.commit()
-            return result.mappings().all()
+            return [_id['id'] for _id in result.mappings().all()]
 
     @classmethod
     def delete(cls, **filter_by):

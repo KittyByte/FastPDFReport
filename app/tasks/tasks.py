@@ -9,16 +9,16 @@ from app.tasks.service import send_msg_to_tg_bot
 
 @celery_app.task(bind=True)
 def create_and_send_report(self, user_id: int, data: dict):
-    # task = ReportDAO.create(
-        
-    # )
-    print('='*100)
-    print(f'{user_id=}\n{data=}\n{self=}')
-    print('='*100)
-    
-    
-    send_msg_to_tg_bot("TEST", data['chat_id'])
+    data_schema = CreatePDFSchema(**data)
 
+    task_id = ReportDAO.create(
+        user_id=user_id,
+        date_from=data_schema.date_from,
+        date_to=data_schema.date_to
+    )
+
+    send_msg_to_tg_bot(f"TEST {task_id=}", data_schema.chat_id)
+    return True
 
 
 @celery_app.task
