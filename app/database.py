@@ -3,8 +3,7 @@ from typing import Annotated
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import (DeclarativeBase, class_mapper, mapped_column,
-                            sessionmaker)
+from sqlalchemy.orm import DeclarativeBase, class_mapper, mapped_column, sessionmaker
 
 from app.settings import settings
 

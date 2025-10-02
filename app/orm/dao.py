@@ -13,6 +13,7 @@ class BaseDAO:
             # __table__.columns нужен чтобы mappings выводил все поля, а не экземпляр класса
             res = session.execute(query)
             return res.mappings().one_or_none()
+        # mappings делает сопоставление поля - значение, без него возвращается просто кортеж значений
 
     @classmethod
     def find_all(cls, **filter_by):
