@@ -17,7 +17,9 @@ def create_and_send_report(self, user_id: int, data: dict):
         date_to=data_schema.date_to
     )
 
-    send_msg_to_tg_bot(f"TEST {task_id=}", data_schema.chat_id)
+    task = ReportDAO.find_one_or_none(id=task_id)
+
+    send_msg_to_tg_bot(f"TEST {task_id=} {task=}", data_schema.chat_id)
     return True
 
 

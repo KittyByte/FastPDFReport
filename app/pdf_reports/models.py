@@ -4,13 +4,12 @@ from enum import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, class_mapper, mapped_column
 
-from app.database import BaseOrm, created_at, intpk, updated_at
+from app.database import BaseOrm
 
 
 class SalesReportOrm(BaseOrm):
     __tablename__ = 'sales_report'
 
-    id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE'))
     period_from: Mapped[date]  # Начало периода
     period_to: Mapped[date]  # Конец периода
@@ -26,7 +25,6 @@ class SalesReportOrm(BaseOrm):
     category_breakdown: Mapped[dict]  # Распределение продаж по категориям
     sales_by_day: Mapped[dict]  # Динамика по дням ({"2025-07-01": 10000, ...})
     comment: Mapped[str]  # Примечания
-    created_at: Mapped[created_at]
 
     def __repr__(self):
         # Форматированный вывод в запросах session при отладке
@@ -52,13 +50,10 @@ class ReportOrm(BaseOrm):
     """ Хранит в себе информацию о созданном по запросу отчете """
     __tablename__ = 'report'
 
-    id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
     date_from: Mapped[date]
     date_to: Mapped[date]
     status: Mapped[ReportStatus] = mapped_column(default=ReportStatus.pending)
     file_path: Mapped[str | None]
-    created_at: Mapped[created_at]
-    updated_at: Mapped[updated_at]
     error_message: Mapped[str | None]
 
