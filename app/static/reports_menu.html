@@ -52,6 +52,12 @@
             padding: 20px;
             overflow-y: auto;
         }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
         .header {
             display: flex;
             justify-content: space-between;
@@ -118,6 +124,18 @@
             color: #ef4444;
             font-size: 14px;
         }
+        .view-btn {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .view-btn:hover {
+            background-color: #059669;
+        }
         .footer {
             position: fixed;
             bottom: 20px;
@@ -137,10 +155,13 @@
         }
         .modal-content {
             background-color: white;
-            margin: 15% auto;
+            margin: 5% auto;
             padding: 20px;
             border-radius: 8px;
-            width: 400px;
+            width: 80%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .close {
             color: #aaa;
@@ -178,45 +199,113 @@
         .submit-btn:hover {
             background-color: #059669;
         }
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .breakdown-table th, .breakdown-table td {
+            padding: 8px;
+            border: 1px solid #e9ecef;
+            text-align: left;
+        }
+        .breakdown-table th {
+            background-color: #f9fafb;
+        }
+        .breakdown-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .sales-modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .sales-modal-table th, .sales-modal-table td {
+            padding: 8px;
+            border: 1px solid #e9ecef;
+            text-align: left;
+        }
+        .sales-modal-table th {
+            background-color: #f9fafb;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="logo">FastAPI</div>
-            <div class="menu-item active">
-                📊 Generated Reports
+            <div class="menu-item active" onclick="switchSection('generated-reports', event)">
+                Созданные PDF отчеты
+            </div>
+            <div class="menu-item" onclick="switchSection('sales-reports', event)">
+                📊 Отчеты продаж
             </div>
         </div>
         <div class="main">
-            <div class="header">
-                <h1 class="title">Generated Reports</h1>
-                <button class="add-btn" onclick="openModal()">+ Create Report</button>
+            <!-- Generated Reports Section -->
+            <div id="generated-reports" class="content-section active">
+                <div class="header">
+                    <h1 class="title">Generated Reports</h1>
+                    <button class="add-btn" onclick="openCreateModal()">+ Create Report</button>
+                </div>
+                <table id="reportsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Date From</th>
+                            <th>Date To</th>
+                            <th>Status</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated by JS -->
+                    </tbody>
+                </table>
             </div>
-            <table id="reportsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Date From</th>
-                        <th>Date To</th>
-                        <th>Status</th>
-                        <th>Error</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated by JS -->
-                </tbody>
-            </table>
+
+            <!-- Sales Reports Section -->
+            <div id="sales-reports" class="content-section">
+                <div class="header">
+                    <h1 class="title">Sales Reports</h1>
+                </div>
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Period From</th>
+                            <th>Period To</th>
+                            <th>Total Orders</th>
+                            <th>Total Revenue</th>
+                            <th>Avg Order Value</th>
+                            <th>Top Product Name</th>
+                            <th>Top Product Sales</th>
+                            <th>Cancelled Orders</th>
+                            <th>Successful Orders</th>
+                            <th>Returned Orders</th>
+                            <th>Payment Methods</th>
+                            <th>Categories</th>
+                            <th>Sales by Day</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="footer" id="footer"></div>
 
-    <!-- Modal -->
+    <!-- Create Report Modal -->
     <div id="createModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeCreateModal()">&times;</span>
             <h2>Create Report</h2>
             <form id="createForm">
                 <div class="form-group">
@@ -232,9 +321,66 @@
         </div>
     </div>
 
+    <!-- Payment Methods Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <h2>Payment Methods Breakdown</h2>
+            <table id="paymentModalTable" class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Category Breakdown Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCategoryModal()">&times;</span>
+            <h2>Category Breakdown</h2>
+            <table id="categoryModalTable" class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sales by Day Modal -->
+    <div id="salesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSalesModal()">&times;</span>
+            <h2>Sales by Day</h2>
+            <table id="salesModalTable" class="sales-modal-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
         const ACCESS_TOKEN = localStorage.getItem('access_token');
-        const API_BASE = 'http://127.0.0.1/report';
+        const API_BASE = 'http://127.0.0.1/reports';
 
         function parseJwt(token) {
             try {
@@ -259,6 +405,23 @@
                 document.getElementById('footer').textContent = `Logged in as: ${decoded.sub}`;
             } else {
                 document.getElementById('footer').textContent = 'Invalid token';
+            }
+        }
+
+        function switchSection(sectionId, event) {
+            // Update menu active state
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Switch content sections
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            // Load data for the section
+            if (sectionId === 'generated-reports') {
+                fetchReports();
+            } else if (sectionId === 'sales-reports') {
+                fetchSalesReports();
             }
         }
 
@@ -315,14 +478,122 @@
             }
         }
 
-        function openModal() {
+        async function fetchSalesReports() {
+            if (!ACCESS_TOKEN) {
+                console.error('No access token found in localStorage');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE}/sales`, {
+                    headers: {
+                        'Authorization': `Bearer ${ACCESS_TOKEN}`
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                const tbody = document.querySelector('#salesTable tbody');
+                tbody.innerHTML = '';
+                data.forEach(report => {
+                    const paymentDataStr = JSON.stringify(report.payment_method_stats).replace(/"/g, '&quot;');
+                    const categoryDataStr = JSON.stringify(report.category_breakdown).replace(/"/g, '&quot;');
+                    const salesDataStr = JSON.stringify(report.sales_by_day).replace(/"/g, '&quot;');
+                    const row = `
+                        <tr>
+                            <td>${report.id}</td>
+                            <td>${formatDate(report.created_at)}</td>
+                            <td>${formatDate(report.updated_at)}</td>
+                            <td>${report.period_from}</td>
+                            <td>${report.period_to}</td>
+                            <td>${report.total_orders}</td>
+                            <td>${report.total_revenue}</td>
+                            <td>${report.avg_order_value}</td>
+                            <td>${report.top_product_name}</td>
+                            <td>${report.top_product_sales}</td>
+                            <td>${report.cancelled_orders}</td>
+                            <td>${report.successful_orders}</td>
+                            <td>${report.returned_orders}</td>
+                            <td><button class="view-btn" onclick="openPaymentModal('${paymentDataStr}')">View</button></td>
+                            <td><button class="view-btn" onclick="openCategoryModal('${categoryDataStr}')">View</button></td>
+                            <td><button class="view-btn" onclick="openSalesModal(${report.id}, '${salesDataStr}')">View</button></td>
+                            <td>${report.comment}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching sales reports:', error);
+            }
+        }
+
+        function openPaymentModal(dataStr) {
+            const data = JSON.parse(dataStr.replace(/&quot;/g, '"'));
+            const tbody = document.querySelector('#paymentModalTable tbody');
+            tbody.innerHTML = '';
+            Object.entries(data).forEach(([method, amount]) => {
+                const row = `
+                    <tr>
+                        <td>${method.charAt(0).toUpperCase() + method.slice(1)}</td>
+                        <td>${amount.toFixed(2)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function openCategoryModal(dataStr) {
+            const data = JSON.parse(dataStr.replace(/&quot;/g, '"'));
+            const tbody = document.querySelector('#categoryModalTable tbody');
+            tbody.innerHTML = '';
+            Object.entries(data).forEach(([category, revenue]) => {
+                const row = `
+                    <tr>
+                        <td>${category}</td>
+                        <td>${revenue.toFixed(2)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+            document.getElementById('categoryModal').style.display = 'block';
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').style.display = 'none';
+        }
+
+        function openSalesModal(id, salesDataStr) {
+            const salesByDay = JSON.parse(salesDataStr.replace(/&quot;/g, '"'));
+            const modal = document.getElementById('salesModal');
+            const tbody = document.querySelector('#salesModalTable tbody');
+            tbody.innerHTML = '';
+            Object.entries(salesByDay).forEach(([date, sales]) => {
+                const row = `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${sales.toFixed(2)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+            modal.style.display = 'block';
+        }
+
+        function closeSalesModal() {
+            document.getElementById('salesModal').style.display = 'none';
+        }
+
+        function openCreateModal() {
             document.getElementById('createModal').style.display = 'block';
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dateFrom').value = today;
             document.getElementById('dateTo').value = today;
         }
 
-        function closeModal() {
+        function closeCreateModal() {
             document.getElementById('createModal').style.display = 'none';
         }
 
@@ -350,7 +621,7 @@
                 if (!response.ok) throw new Error('Failed to create');
                 const result = await response.json();
                 if (result.success) {
-                    closeModal();
+                    closeCreateModal();
                     fetchReports(); // Refresh table
                 }
             } catch (error) {
@@ -358,17 +629,29 @@
             }
         });
 
-        // Load reports and update footer on page load
+        // Load initial data and update footer on page load
         window.onload = function() {
             updateFooter();
-            fetchReports();
+            fetchReports(); // Load default section
         };
 
-        // Close modal on outside click
+        // Close modals on outside click
         window.onclick = function(event) {
-            const modal = document.getElementById('createModal');
-            if (event.target === modal) {
-                closeModal();
+            const createModal = document.getElementById('createModal');
+            const paymentModal = document.getElementById('paymentModal');
+            const categoryModal = document.getElementById('categoryModal');
+            const salesModal = document.getElementById('salesModal');
+            if (event.target === createModal) {
+                closeCreateModal();
+            }
+            if (event.target === paymentModal) {
+                closePaymentModal();
+            }
+            if (event.target === categoryModal) {
+                closeCategoryModal();
+            }
+            if (event.target === salesModal) {
+                closeSalesModal();
             }
         }
     </script>
