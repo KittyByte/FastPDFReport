@@ -15,15 +15,11 @@ from app.users.service import get_user
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get('sub')
-
-        if username is None:
-            raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(**payload)
     except InvalidTokenError:
         raise credentials_exception
 
-    user = get_user(username=token_data.username)
+    user = get_user(username=token_data.sub)
     if user is None:
         raise credentials_exception
     return user

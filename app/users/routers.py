@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import HTMLResponse, FileResponse
 
 from app.users.schemas import Token, User
 from app.exceptions import invalid_user_exception
@@ -31,4 +32,9 @@ async def read_users_me(current_user: GetCurrentActiveUserDep):
 @router.get("/me/items/")
 async def read_own_items(current_user: GetCurrentActiveUserDep):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+
+@router.get("/login", response_class=HTMLResponse)
+async def get_html_user_login():
+    return FileResponse('app/static/fastapi_login.html')
 

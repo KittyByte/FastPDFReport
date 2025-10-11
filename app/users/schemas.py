@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class Token(BaseModel):
@@ -7,14 +8,16 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    sub: str
+    exp: datetime
 
 
 class User(BaseModel):
     username: str
     fullname: str | None = None
     email: str | None = None
-    disabled: bool | None = None
+    disabled: bool
+    telegram_id: int | None = None
 
 
 class UserInDB(User):

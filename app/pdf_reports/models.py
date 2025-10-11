@@ -38,7 +38,7 @@ class SalesReportOrm(BaseOrm):
 
 
 
-class ReportStatus(Enum):
+class ReportStatusEnum(Enum):
     pending = 'pending'
     in_progress = 'in_progress'
     done = 'done'
@@ -53,7 +53,7 @@ class ReportOrm(BaseOrm):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
     date_from: Mapped[date]
     date_to: Mapped[date]
-    status: Mapped[ReportStatus] = mapped_column(default=ReportStatus.pending)
+    status: Mapped[ReportStatusEnum] = mapped_column(default=ReportStatusEnum.pending)
     file_path: Mapped[str | None]
     error_message: Mapped[str | None]
 

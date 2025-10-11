@@ -18,7 +18,8 @@ def create_user():
         password='acuna_matata',
         fullname='Spongebob Squarepants',
         email='qwerty@gmail.com',
-        disabled=False
+        disabled=False,
+        telegram_id=670076879
     )
 
 
