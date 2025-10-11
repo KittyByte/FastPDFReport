@@ -211,7 +211,7 @@
             </table>
         </div>
     </div>
-    <div class="footer">Logged in as: admin@example.com</div>
+    <div class="footer" id="footer"></div>
 
     <!-- Modal -->
     <div id="createModal" class="modal">
@@ -235,6 +235,32 @@
     <script>
         const ACCESS_TOKEN = localStorage.getItem('access_token');
         const API_BASE = 'http://127.0.0.1/report';
+
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function updateFooter() {
+            if (!ACCESS_TOKEN) {
+                document.getElementById('footer').textContent = 'Not logged in';
+                return;
+            }
+            const decoded = parseJwt(ACCESS_TOKEN);
+            if (decoded && decoded.sub) {
+                document.getElementById('footer').textContent = `Logged in as: ${decoded.sub}`;
+            } else {
+                document.getElementById('footer').textContent = 'Invalid token';
+            }
+        }
 
         function formatDate(isoString) {
             if (!isoString) return '';
@@ -332,8 +358,11 @@
             }
         });
 
-        // Load reports on page load
-        window.onload = fetchReports;
+        // Load reports and update footer on page load
+        window.onload = function() {
+            updateFooter();
+            fetchReports();
+        };
 
         // Close modal on outside click
         window.onclick = function(event) {
