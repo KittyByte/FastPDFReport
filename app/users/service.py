@@ -32,5 +32,5 @@ def create_access_token(
 
 
 def get_user(username: str) -> UserInDB | None:
-    return UserDAO.find_one_or_none(username=username)
+    return UserDAO.find_one_by(username=username)
 

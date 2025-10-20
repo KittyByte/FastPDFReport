@@ -33,6 +33,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ./files:/project/files
 
   rabbitmq:
     container_name: ${COMPOSE_PROJECT_NAME}-rabbitmq

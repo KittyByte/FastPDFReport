@@ -13,8 +13,8 @@ class UserDAO(BaseDAO):
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     
     @classmethod
-    def find_one_or_none(cls, **filter_by):
-        user = super().find_one_or_none(**filter_by)
+    def find_one_by(cls, **filter_by):
+        user = super().find_one_by(**filter_by)
         return UserInDB(**user) if user else None
 
     @classmethod

@@ -22,7 +22,7 @@ def create_pdf_report(current_user: GetCurrentActiveUserDep, data: CreatePDFSche
 
 @router.get('/items')
 def get_pdf_reports(current_user: GetCurrentActiveUserDep) -> list[PDFReportSchema]:
-    return ReportDAO.find_all(user_id=current_user.id)
+    return ReportDAO.find_all_by(user_id=current_user.id)
 
 
 @router.get('/reports')
@@ -32,5 +32,5 @@ def get_html_pdf_reports() -> HTMLResponse:
 
 @router.get('/sales')
 def get_sales(current_user: GetCurrentActiveUserDep) -> list[SalesReportSchema]:
-    return SalesReportDAO.find_all(user_id=current_user.id)
+    return SalesReportDAO.find_all_by(user_id=current_user.id)
 
