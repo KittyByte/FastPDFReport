@@ -37,7 +37,7 @@ def create_and_send_report(self, user_id: int, data: dict):
     file_path = generate_report_pdf(sales)
     # task['file_path'] = file_path
     # task['status'] = ReportStatusEnum.done
-    # SalesReportDAO.update(task.id, **task)
+    ReportDAO.update(task.id, file_path=str(file_path), status=ReportStatusEnum.done)
 
     logging.info(f"End create_and_send_report task for {user_id=} with {data=}")
     if not file_path:
