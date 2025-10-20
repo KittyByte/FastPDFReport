@@ -631,6 +631,10 @@
 
         // Load initial data and update footer on page load
         window.onload = function() {
+            if (!ACCESS_TOKEN) {
+                window.location.href = 'http://127.0.0.1/users/login';
+                return;
+            }
             updateFooter();
             fetchReports(); // Load default section
         };
